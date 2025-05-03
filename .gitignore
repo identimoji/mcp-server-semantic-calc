@@ -170,5 +170,17 @@ cython_debug/
 # Ruff stuff:
 .ruff_cache/
 
-# PyPI configuration file
-.pypirc
+# Project-specific
+emojikey_visualization.html
+dimension_similarity.png
+dimension_clusters.png
+*.npy
+*.pkl
+
+# VSCode
+.vscode/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
