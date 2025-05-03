@@ -2,6 +2,25 @@
 requires = ["setuptools>=42", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "semantic-calculator"
+version = "0.1.0"
+description = "Semantic operations tool for vector and emoji calculations"
+authors = [
+    {name = "Claude & Rob", email = "your.email@example.com"}
+]
+requires-python = ">=3.8"
+dependencies = [
+    "numpy>=1.20.0",
+    "scikit-learn>=1.0.0",
+    "sentence-transformers>=2.2.0",
+    "torch>=1.10.0",
+    "matplotlib>=3.4.0",
+    "umap-learn>=0.5.2",
+    "plotly>=5.5.0",
+    "seaborn>=0.11.2",
+]
+
 [tool.black]
 line-length = 88
 include = '\.pyi?$'
