@@ -25,16 +25,27 @@ class SemanticCalculator:
         Args:
             model_name: The name of the sentence transformer model to use
         """
-        try:
-            from sentence_transformers import SentenceTransformer
-            self.model = SentenceTransformer(model_name)
-            logger.info(f"Initialized SemanticCalculator with model {model_name}")
-        except ImportError:
-            logger.warning("sentence-transformers not installed. Some functions will be unavailable.")
-            self.model = None
-            
+        self._model = None
+        self.model_name = model_name
+        
         # Cache for emoji embeddings to improve performance
         self.emoji_cache = {}
+        
+        logger.info(f"SemanticCalculator initialized (model will be loaded on first use)")
+    
+    @property
+    def model(self):
+        """Lazy-load the model only when it's first needed"""
+        if self._model is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+                logger.info(f"Loading SentenceTransformer model {self.model_name}...")
+                self._model = SentenceTransformer(self.model_name)
+                logger.info(f"Model loaded successfully")
+            except ImportError:
+                logger.warning("sentence-transformers not installed. Some functions will be unavailable.")
+                raise ImportError("sentence-transformers not installed. Cannot use model-dependent functions.")
+        return self._model
 
     def semantic_calculator_text_to_vector(self, text: str) -> np.ndarray:
         """

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "semantic-calculator": {
+      "command": "uvx",
+      "args": [
+        "-m", 
+        "semantic_calculator.mcp"
+      ]
+    }
+  }
+}
