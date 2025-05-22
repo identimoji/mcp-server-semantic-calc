@@ -10,47 +10,60 @@ A Python-based MCP tool for semantic operations on vectors, text, and emoji, wit
 - Parse and analyze Emojikey V3 strings
 - Calculate semantic field distance between dimensions
 
+## Requirements
+
+- **Python 3.10+** (required by MCP SDK)
+- Apple Silicon Mac (M1/M2/M3) or Intel Mac
+- Claude Desktop application
+
 ## Installation
 
-### Installation for Development (Apple Silicon Macs)
-
-If you're on an Apple Silicon Mac (M1/M2/M3), use the provided installation script that ensures the correct architecture is used:
+### 1. Install Dependencies
 
 ```bash
 # Clone the repository
 git clone https://github.com/yourusername/mcp-server-semantic-calc.git
 cd mcp-server-semantic-calc
 
-# Run the installation script (uses native arm64 architecture)
-./install_native.sh
+# Install dependencies using uv (recommended)
+uv sync
+
+# Or install in development mode
+uv pip install -e .
 ```
 
-The script will:
-1. Switch to arm64 architecture if needed
-2. Install the package in editable mode
-3. Install all required dependencies
-4. Register the MCP server with Claude Desktop
+### 2. Configure Claude Desktop
 
-### Running the Server Manually
+Add this configuration to your Claude Desktop settings (typically `~/Library/Application Support/Claude/claude_desktop_config.json`):
 
-```bash
-# Run in native arm64 mode (Apple Silicon Macs)
-./run_native.sh
-
-# Or run directly with Python in the correct architecture
-arch -arm64 python3 -m semantic_calculator.mcp
-
-# Or run directly using the MCP CLI (if architecture issues are resolved)
-arch -arm64 ~/Library/Python/3.11/bin/mcp run semantic_calculator/mcp.py
+```json
+{
+  "mcpServers": {
+    "Semantic Calculator": {
+      "command": "arch",
+      "args": [
+        "-arm64",
+        "/Users/rob/.local/bin/uv",
+        "--directory",
+        "/Users/rob/repos/mcp-server-semantic-calc",
+        "run",
+        "-m",
+        "semantic_calculator",
+        "mcp"
+      ]
+    }
+  }
+}
 ```
 
-### Development Workflow
+**Important Notes:**
+- Replace `/Users/rob/` with your actual home directory path
+- The `-arm64` flag ensures native Apple Silicon execution
+- Make sure `/Users/rob/.local/bin/uv` exists (install with `curl -LsSf https://astral.sh/uv/install.sh | sh`)
 
-For development or customization:
+### 3. Restart Claude Desktop
 
-1. Make changes to the code
-2. No need to reinstall - editable mode (`-e`) allows changes to be detected automatically
-3. Restart Claude Desktop to pick up the changes
+Restart Claude Desktop to load the new MCP server.
 
 ## Usage
 
@@ -117,20 +130,29 @@ python -m semantic_calculator.examples.analyze_emojikey
 
 ## Dependencies
 
-The semantic calculator strictly requires the following dependencies to work:
+### Core Dependencies (Required)
 
-- sentence-transformers (SentenceBERT) - Required for semantic vector embeddings
-- numpy - Required for vector operations
-- scikit-learn - Required for distance calculations
-- torch - Required by SentenceBERT
+These dependencies are automatically installed via `pyproject.toml`:
 
-For visualization features, these additional dependencies are needed:
-- matplotlib - For basic visualization
-- plotly - For interactive 3D visualization
-- umap-learn - For dimensionality reduction
-- seaborn - For enhanced visualizations
+- **Python 3.10+** - Required by MCP SDK
+- **mcp>=0.9.0** - Model Context Protocol SDK
+- **sentence-transformers>=2.2.0** - For semantic vector embeddings
+- **numpy>=1.20.0** - For vector operations
+- **scikit-learn>=1.0.0** - For distance calculations
+- **torch>=1.10.0** - Required by SentenceBERT
 
-Note: The semantic calculator will refuse to start if any of the core dependencies (SentenceBERT, numpy, scikit-learn) are not installed.
+### Visualization Dependencies (Optional)
+
+- **matplotlib>=3.4.0** - For basic visualization
+- **plotly>=5.5.0** - For interactive 3D visualization
+- **umap-learn>=0.5.2** - For dimensionality reduction
+- **seaborn>=0.11.2** - For enhanced visualizations
+
+### Development Dependencies
+
+- **pytest>=7.0.0** - For testing (install with `uv sync --dev`)
+
+**Note:** The semantic calculator will refuse to start if any of the core dependencies are not installed. All dependencies are managed through `pyproject.toml` and installed automatically with `uv sync`.
 
 ## License
 
